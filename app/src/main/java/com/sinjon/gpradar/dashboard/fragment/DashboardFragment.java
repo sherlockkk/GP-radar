@@ -2,6 +2,7 @@ package com.sinjon.gpradar.dashboard.fragment;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -80,13 +81,13 @@ public class DashboardFragment extends BaseFragment implements SeekBar.OnSeekBar
 
         // enable scaling and dragging
         mChart.setDragEnabled(true);
-        mChart.setScaleEnabled(true);
+        mChart.setScaleEnabled(false);
 
         mChart.setMaxVisibleValueCount(200);
         mChart.setPinchZoom(true);
 
-        mSeekBarX.setProgress(45);
-        mSeekBarY.setProgress(100);
+        mSeekBarX.setProgress(20);
+        mSeekBarY.setProgress(30);
 
         Legend l = mChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
@@ -99,25 +100,95 @@ public class DashboardFragment extends BaseFragment implements SeekBar.OnSeekBar
         YAxis yl = mChart.getAxisLeft();
         yl.setTypeface(mTfLight);
         yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        yl.setDrawGridLines(false);
 
         mChart.getAxisRight().setEnabled(false);
 
         XAxis xl = mChart.getXAxis();
         xl.setTypeface(mTfLight);
+        xl.setSpaceMin(1);
         xl.setDrawGridLines(false);
+
+        onHiddenChanged(false);
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            Log.i("-----", "go: !hidden");
+            go();
+        }else {
+            Log.i("-----", "go: hidden");
+        }
+    }
 
+    public void go() {
+        Log.i("-----", "go: ");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 1; i < 1000; i++) {
+                    for (int j = 1; j < 30; j++) {
+                        final int finalI = i;
+                        final int finalJ = j;
+                        mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                addEntry(finalI, finalJ);
+                            }
+                        });
+                    }
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
+
+    ArrayList<Entry> yVals1 = new ArrayList<Entry>();
+    private void addEntry(float x,float y) {
+
+        Log.i("---------", "addEntry: " + x + " " + y);
+        yVals1.add(new Entry(x, y));
+
+        // create a dataset and give it a type
+        ScatterDataSet set1 = new ScatterDataSet(yVals1, "DS 1");
+        set1.setScatterShape(ScatterChart.ScatterShape.SQUARE);
+        set1.setColor(ColorTemplate.COLORFUL_COLORS[0]);
+
+        set1.setScatterShapeSize(20f);
+
+        ArrayList<IScatterDataSet> dataSets = new ArrayList<IScatterDataSet>();
+        dataSets.add(set1); // add the datasets
+
+        // create a data object with the datasets
+        data = new ScatterData(dataSets);
+        data.setValueTypeface(mTfLight);
+
+        mChart.setData(data);
+        mChart.setVisibleXRangeMaximum(20);
+        mChart.moveViewToX(data.getEntryCount()-21);
+        mChart.invalidate();
+    }
+
+    ScatterData data;
+
+    /*
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        tvX.setText("" + (mSeekBarX.getProgress() + 1));
+        tvX.setText("" + (mSeekBarX.getProgress()));
         tvY.setText("" + (mSeekBarY.getProgress()));
 
         ArrayList<Entry> yVals1 = new ArrayList<Entry>();
 
-        for (int i = 0; i < mSeekBarX.getProgress(); i++) {
-            float val = (float) (Math.random() * mSeekBarY.getProgress()) + 3;
-            yVals1.add(new Entry(i, val));
+        for (int i = 1; i < mSeekBarX.getProgress() + 1; i++) {
+            for (int j = 1; j < mSeekBarY.getProgress() + 1; j++) {
+                yVals1.add(new Entry(i, j));
+            }
         }
 
         // create a dataset and give it a type
@@ -131,11 +202,16 @@ public class DashboardFragment extends BaseFragment implements SeekBar.OnSeekBar
         dataSets.add(set1); // add the datasets
 
         // create a data object with the datasets
-        ScatterData data = new ScatterData(dataSets);
+        data = new ScatterData(dataSets);
         data.setValueTypeface(mTfLight);
 
         mChart.setData(data);
         mChart.invalidate();
+    }*/
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
     }
 
     @Override
