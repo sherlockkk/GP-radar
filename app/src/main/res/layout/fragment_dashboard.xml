@@ -25,7 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <com.github.mikephil.charting.charts.ScatterChart
+        <com.jjoe64.graphview.GraphView
+            android:background="@android:color/black"
             android:id="@+id/scatterchart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
