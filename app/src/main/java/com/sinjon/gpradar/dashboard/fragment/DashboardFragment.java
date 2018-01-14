@@ -27,6 +27,7 @@ import com.sinjon.gpradar.base.BaseFragment;
 import com.sinjon.gpradar.dashboard.custom.CustomScatterShapeRenderer;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * @author SongJian
@@ -135,7 +136,7 @@ public class DashboardFragment extends BaseFragment implements SeekBar.OnSeekBar
                         mActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                addEntry(finalI, finalJ);
+                                addEntry(finalI, finalJ, new Random().nextInt(30));
                             }
                         });
                     }
@@ -150,29 +151,97 @@ public class DashboardFragment extends BaseFragment implements SeekBar.OnSeekBar
     }
 
     ArrayList<Entry> yVals1 = new ArrayList<Entry>();
-    private void addEntry(float x,float y) {
+    private void addEntry(float x,float y, int z) {
 
         Log.i("---------", "addEntry: " + x + " " + y);
         yVals1.add(new Entry(x, y));
 
         // create a dataset and give it a type
-        ScatterDataSet set1 = new ScatterDataSet(yVals1, "DS 1");
-        set1.setScatterShape(ScatterChart.ScatterShape.SQUARE);
-        set1.setColor(ColorTemplate.COLORFUL_COLORS[0]);
+//        ScatterDataSet set1 = new ScatterDataSet(yVals1, "DS 1");
+//        set1.setScatterShape(ScatterChart.ScatterShape.SQUARE);
+        Log.i("zzz", "addEntry: " + z);
+        ScatterDataSet set = new ScatterDataSet(null, "");
+        if (z < 10) {
+            ScatterDataSet set1 = new ScatterDataSet(yVals1, "DS 1");
+            set1.setScatterShape(ScatterChart.ScatterShape.SQUARE);
+            set1.setColor(ColorTemplate.COLORFUL_COLORS[0]);
+            set1.setScatterShapeSize(30f);
+            set = set1;
+            ArrayList<IScatterDataSet> dataSets = new ArrayList<IScatterDataSet>();
+            dataSets.add(set); // add the datasets
 
-        set1.setScatterShapeSize(20f);
+            // create a data object with the datasets
+            data = new ScatterData(dataSets);
+            data.setValueTypeface(mTfLight);
 
-        ArrayList<IScatterDataSet> dataSets = new ArrayList<IScatterDataSet>();
-        dataSets.add(set1); // add the datasets
+            mChart.setData(data);
+            mChart.setVisibleXRangeMaximum(20);
+            mChart.moveViewToX(data.getEntryCount()-21);
+            mChart.invalidate();
+        } else if (z < 20) {
+            ScatterDataSet set1 = new ScatterDataSet(yVals1, "DS 1");
+            set1.setScatterShape(ScatterChart.ScatterShape.SQUARE);
+            set1.setColor(ColorTemplate.COLORFUL_COLORS[1]);
+            set1.setScatterShapeSize(30f);
+            set = set1;
+            ArrayList<IScatterDataSet> dataSets = new ArrayList<IScatterDataSet>();
+            dataSets.add(set); // add the datasets
 
-        // create a data object with the datasets
-        data = new ScatterData(dataSets);
-        data.setValueTypeface(mTfLight);
+            // create a data object with the datasets
+            data = new ScatterData(dataSets);
+            data.setValueTypeface(mTfLight);
 
-        mChart.setData(data);
-        mChart.setVisibleXRangeMaximum(20);
-        mChart.moveViewToX(data.getEntryCount()-21);
-        mChart.invalidate();
+            mChart.setData(data);
+            mChart.setVisibleXRangeMaximum(20);
+            mChart.moveViewToX(data.getEntryCount()-21);
+            mChart.invalidate();
+        } else if (z < 30) {
+            ScatterDataSet set1 = new ScatterDataSet(yVals1, "DS 1");
+            set1.setScatterShape(ScatterChart.ScatterShape.SQUARE);
+            set1.setColor(ColorTemplate.COLORFUL_COLORS[2]);
+            set1.setScatterShapeSize(30f);
+            set = set1;
+            ArrayList<IScatterDataSet> dataSets = new ArrayList<IScatterDataSet>();
+            dataSets.add(set); // add the datasets
+
+            // create a data object with the datasets
+            data = new ScatterData(dataSets);
+            data.setValueTypeface(mTfLight);
+
+            mChart.setData(data);
+            mChart.setVisibleXRangeMaximum(20);
+            mChart.moveViewToX(data.getEntryCount()-21);
+            mChart.invalidate();
+        }else {
+            ScatterDataSet set1 = new ScatterDataSet(yVals1, "DS 1");
+            set1.setScatterShape(ScatterChart.ScatterShape.SQUARE);
+            set1.setColor(ColorTemplate.COLORFUL_COLORS[3]);
+            set1.setScatterShapeSize(30f);
+            set = set1;
+            ArrayList<IScatterDataSet> dataSets = new ArrayList<IScatterDataSet>();
+            dataSets.add(set); // add the datasets
+
+            // create a data object with the datasets
+            data = new ScatterData(dataSets);
+            data.setValueTypeface(mTfLight);
+
+            mChart.setData(data);
+            mChart.setVisibleXRangeMaximum(20);
+            mChart.moveViewToX(data.getEntryCount()-21);
+            mChart.invalidate();
+        }
+
+//        ArrayList<IScatterDataSet> dataSets = new ArrayList<IScatterDataSet>();
+//        dataSets.add(set); // add the datasets
+//
+//        // create a data object with the datasets
+//        data = new ScatterData(dataSets);
+//        data.setValueTypeface(mTfLight);
+//
+//        mChart.setData(data);
+//        mChart.setVisibleXRangeMaximum(20);
+//        mChart.moveViewToX(data.getEntryCount()-21);
+//        mChart.invalidate();
     }
 
     ScatterData data;
